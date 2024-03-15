@@ -2,8 +2,25 @@ import React, { useEffect, useState } from 'react'
 import axios from "axios"
 import './Table.css'
 import {FaRegChartBar,FaLevelUpAlt, FaLevelDownAlt,FaCaretDown,FaCaretUp} from 'react-icons/fa'
-import Slider from 'rc-slider'
 
+const PercentageBar = ({ pctChange }) => {
+    // Style the bar based on positive or negative percentage change
+    const barStyle = {
+        width: Math.abs(pctChange) + '%',
+        backgroundColor: pctChange >= 0 ? '#4CAF50' : '#F44336',
+        height: '10px',
+        borderRadius: '10px'
+    };
+
+    return (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ width: '100px', backgroundColor: 'lightgray', marginRight: '5px', borderRadius: '10px', overflow: 'hidden' }}>
+                <div style={barStyle}></div>
+            </div>
+            <span>{pctChange}%</span>
+        </div>
+    );
+};
 
 function Table() {
     let [users,setUsers]=useState(null);
@@ -70,12 +87,8 @@ function Table() {
                             </td>
                             <td style={{ padding: "10px", border: "1px solid black" }} className='item4'>{item.open}</td>
                             <td style={{ padding: "10px", border: "1px solid black" }} className='item5'>{item.pctChange}</td>
-                            <td style={{ padding: "5px", border: "1px solid black" }} className='item6'>
-                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                    {item.low + ' '}
-                                    <Slider min={0} max={550} defaultValue={(item.high - item.low) / 2} style={{marginLeft:'9px',marginRight:'5px'}}/>
-                                    {' ' + item.high}
-                                </div>
+                            <td className='item6'>
+                                {item.open} <PercentageBar pctChange={item.pctChange} />
                             </td>
                             <td style={{ padding: "10px", fontWeight: 'normal', fontSize: '13px' }} className='item7'>
                                 <span style={{ backgroundColor: item.openHighLowSignal === 'Open=Low' ? '#abf7b1' : item.openHighLowSignal === 'Open=High' ? '#FF8A8A' : 'inherit', borderRadius: '80px', padding: '5px', color: item.openHighLowSignal === 'Open=Low' ? '#228C22' : item.openHighLowSignal === 'Open=High' ? '#DA012D' : 'inherit' }}>
